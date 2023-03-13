@@ -4,8 +4,9 @@ import {
   Route,
 } from 'react-router-dom';
 
-import SelectSpotifyPlaylist from "./components/spotifyToYoutube/SelectSpotifyPlaylist";
 import HomePage from './components/home/HomePage';
+import SelectSpotifyPlaylist from "./components/spotifyToYoutube/SelectSpotifyPlaylist";
+import SelectYouTubePlaylist from './components/youtubeToSpotify.js/SelectYouTubePlaylist';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<HomePage />}></Route>
           <Route path="/spotify" element={<SelectSpotifyPlaylist />}></Route>
+          <Route path="/youtube" element={<SelectYouTubePlaylist />}></Route>
         </Routes>
       </Router>
     </div>

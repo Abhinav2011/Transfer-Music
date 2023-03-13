@@ -2,8 +2,9 @@ import axios from "axios";
 
 const URL = 'https://api.spotify.com/v1';
 
+const spotifyAccessToken = localStorage.getItem("spotifyAccessToken");
+
 const getCurrentUserPlaylist = async () => {
-    const spotifyAccessToken = localStorage.getItem("spotifyAccessToken");
     const config = {
         headers:{
             "Authorization":`Bearer ${spotifyAccessToken}`,
@@ -14,5 +15,15 @@ const getCurrentUserPlaylist = async () => {
     return playListData;
 }
 
+const getSongsInsideCurrentUserPlaylist = async (playlistId) => {
+    const config = {
+        headers:{
+            "Authorization":`Bearer ${spotifyAccessToken}`,
+            "Content-Type": "application/json",
+        }
+    }
+    const songsInsidePlaylistData = await axios.get(`${URL}/playlists/${playlistId}/tracks`,config);
+    return songsInsidePlaylistData;
+}
 
-export {getCurrentUserPlaylist};
+export {getCurrentUserPlaylist, getSongsInsideCurrentUserPlaylist};

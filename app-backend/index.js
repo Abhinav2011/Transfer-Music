@@ -16,7 +16,7 @@ const YOUTUBE_REDIRECT_URI = process.env.YOUTUBE_REDIRECT_URI;
 //from the Spotify API. When user clicks on export, this route will be invoked
 //and user will be redirected.
 app.get("/spotify/login", (req, res) => {
-  const scope = "playlist-read-private";
+  const scope = "playlist-read-private playlist-modify-public playlist-modify-private";
 
   const queryParams = querystring.stringify({
     client_id: SPOTIFY_CLIENT_ID,
@@ -107,11 +107,6 @@ app.get("/youtube/login", (req, res) => {
   res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${queryParams}`);
 });
 
-// app.get("/youtube/callback",(req,res) => {
-//   res.send({
-
-//   })
-// });
 
 app.listen(PORT, () => {
   console.log("started backend of the app!!!");

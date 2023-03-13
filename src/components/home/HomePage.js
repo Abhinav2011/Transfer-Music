@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
-import { Button, Divider, Form, Grid, Segment } from "semantic-ui-react";
+import { Button, Divider, Grid, Segment } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import {getYouTubePlaylist, getYouTubePlaylistItems} from "../../api/youtube/YouTube";
 
 const HomePage = () => {
   //TODO: handle login to spotify and youtube
@@ -34,21 +33,6 @@ const HomePage = () => {
     localStorage.setItem("youtubeAccessToken", youtubeAccessToken);
   }, []);
 
-  const handleClick = async () => {
-    const data = await getYouTubePlaylist();
-    // console.log(data);
-    // const items = data.data.items;
-    // items.map((item) => {
-    //     console.log(item.)
-    // })
-    const playlists = data.data.items;
-    playlists.forEach(async (playlist) => {
-      const playlistId = playlist.id;
-      const sample = await getYouTubePlaylistItems(playlistId);
-      console.log(sample);
-    });
-    // console.log(data.data.items);
-  }
   return (
     <div className="home">
       <h1>Export your playlist from Spotify to Yotube or Vice Versa</h1>
@@ -74,7 +58,9 @@ const HomePage = () => {
 
             <Grid.Column verticalAlign="middle">
               <p>Export your playlists from YouTube to Spotify</p>
-              <Button onClick={handleClick}> YouTube to Spotify</Button>
+              <Link to="/youtube">
+                <Button> YouTube to Spotify</Button>
+              </Link>
             </Grid.Column>
           </Grid>
 

@@ -4,6 +4,7 @@ const URL = "https://www.googleapis.com/youtube/v3";
 
 const youtubeAccessToken = localStorage.getItem("youtubeAccessToken");
 
+//GET 
 const getYouTubePlaylist = async () => {
   const config = {
     params: {
@@ -19,6 +20,7 @@ const getYouTubePlaylist = async () => {
   return data;
 };
 
+//GET
 const getYouTubePlaylistItems = async (playlistId) => {
   const config = {
     params: {
@@ -34,4 +36,24 @@ const getYouTubePlaylistItems = async (playlistId) => {
   return data;
 };
 
-export { getYouTubePlaylist, getYouTubePlaylistItems};
+//POST
+const createYouTubePlaylist = async (title) => {
+  //axios.post(api, data, config)
+  const data = {
+    "snippet": {
+      "title": title
+    }
+  }
+  const config = {
+    params: {
+      "part": "snippet,contentDetails",
+    },
+    headers: {
+      "Authorization": `Bearer ${youtubeAccessToken}`,
+      "Content-Type": "application/json",
+    },
+  };
+  const res = await axios.post(`${URL}/playlists`,data,config);
+  return res;
+}
+export { getYouTubePlaylist, getYouTubePlaylistItems,createYouTubePlaylist};
