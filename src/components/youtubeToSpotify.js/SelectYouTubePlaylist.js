@@ -2,33 +2,70 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Checkbox, Button } from "semantic-ui-react";
 import {
-  getYouTubePlaylist,
-  getYouTubePlaylistItems,
-} from "../../api/youtube/YouTube";
+  getAllYoutubePlaylist,
+  getAllSongsInsidePlaylist,
+} from "../../utils/YoutubeAPICalls";
+import {
+  getUserIdAndCreatePlaylist,
+  insertSongInPlaylist,
+  searchForSongIdAndCreateSongURI,
+} from "../../utils/SpotifyAPICalls";
+import { insertSongInSpotifyPlaylist } from "../../api/spotify/Spotify";
 
 const SelectYouTubePlaylist = () => {
   const [playList, setPlaylist] = useState([]);
-  //   const [playListTracksLink, setplayListTracksLink] = useState([]);
+  const [songsInsidePlaylist, setSongsInsidePlaylist] = useState([]);
   const [checkedState, setCheckedState] = useState([]);
 
   useEffect(() => {
-    let playListResult = [];
-    const fetchData = async () => {
-      const data = await getYouTubePlaylist();
-      const playlists = data.data.items;
-      playlists.forEach((playlist) => {
-        playListResult.push(playlist.snippet.localized.title);
-      });
-      setPlaylist(playListResult);
-      setCheckedState(new Array(playListResult.length).fill(false));
-      //   playlists.forEach(async (playlist) => {
-      //     const playlistId = playlist.id;
-      //     const sample = await getYouTubePlaylistItems(playlistId);
-      //     console.log(sample);
-      //   });
-      // console.log(data.data.items);
-    };
-    fetchData();
+    let songsArray = [];
+    let samplePlaylist = [];
+    samplePlaylist.push({
+      playlistName: "TEST",
+      playlistId: "sampleID",
+    });
+    samplePlaylist.push({
+      playlistName: "TEST2",
+      playlistId: "sampleID",
+    });
+    songsArray.push({
+      playlistName: "TEST",
+      songs: ["Lover", "London Boy"],
+    });
+    songsArray.push({
+      playlistName: "TEST2",
+      songs: ["Midnight Rain", "Humma"],
+    });
+    setPlaylist(samplePlaylist);
+    setSongsInsidePlaylist(songsArray);
+    // const fetchData = async () => {
+    //   const playlists = await getAllYoutubePlaylist();
+    //   for(let i=0;i<playlists.length;++i){
+    //     const singlePlaylist = playList[i];
+    //     const songs = await getAllSongsInsidePlaylist(singlePlaylist.playlistId);
+    //     console.log(singlePlaylist.playlistName);
+    //     // console.log(songs);
+    //     console.log(singlePlaylist.playlistName + " has number of songs = " + songs.length);
+    //     songsArray.push({
+    //       "playlistName":singlePlaylist.playlistName,
+    //       "songs":songs,
+    //     });
+    //   }
+    // playlists.forEach(async (singlePlaylist) => {
+    //   const songs = await getAllSongsInsidePlaylist(singlePlaylist.playlistId);
+    //   console.log(singlePlaylist.playlistName);
+    //   // console.log(songs);
+    //   console.log(singlePlaylist.playlistName + " has number of songs = " + songs.length);
+    //   songsArray.push({
+    //     "playlistName":singlePlaylist.playlistName,
+    //     "songs":songs,
+    //   });
+    // });
+    // setSongsInsidePlaylist(songsArray);
+    setCheckedState(new Array(songsArray.length).fill(false));
+    // };
+    // fetchData();
+    // console.log(songsInsidePlaylist);
   }, []);
 
   const handleCheckedStateChange = (selectedCheckedBoxIndex) => {
@@ -44,6 +81,48 @@ const SelectYouTubePlaylist = () => {
     });
     setCheckedState(updatedCheckedState);
   };
+
+  const handleExport = async () => {
+    await Promise.all(checkedState.map(async (state, index) => {
+      if (state) {
+        //console.log("reached");
+        const tempData = await getUserIdAndCreatePlaylist(playList[index].playlistName);
+        const createdSpotifyPlaylistId = tempData.data.id;
+        const songs = songsInsidePlaylist[index].songs;
+        const songURIArray = await searchForSongIdAndCreateSongURI(songs);
+        await insertSongInPlaylist(songURIArray,createdSpotifyPlaylistId);
+        
+      //   if (songURIArray.length <= 100) {
+      //     const res = await insertSongInSpotifyPlaylist(createdSpotifyPlaylistId,songURIArray);
+      //     console.log(res);
+      //   } else {
+      //     let start = 0,
+      //       end = 100;
+      //     while (end < songURIArray.length) {
+      //       const tempSongUriArray = songURIArray.slice(start, end);
+      //       const res = await insertSongInSpotifyPlaylist(
+      //         playList[index].playlistId,
+      //         tempSongUriArray.toString()
+      //       );
+      //       console.log(res);
+      //       start = end;
+      //       if (end + 100 > songURIArray.length) {
+      //         end = songURIArray.length + 1;
+      //       } else {
+      //         end = end + 100;
+      //       }
+      //     }
+      //     const tempSongUriArray = songURIArray.slice(start, end);
+      //     const res = await insertSongInSpotifyPlaylist(
+      //       playList[index].playlistId,
+      //       tempSongUriArray.toString()
+      //     );
+      //     console.log(res);
+      //   }
+      }
+    }));
+  };
+
   return (
     <div className="selectYoutubePlaylist">
       <h1>Select Playlist</h1>
@@ -52,9 +131,9 @@ const SelectYouTubePlaylist = () => {
           return (
             <div>
               <Checkbox
-                key={item}
+                key={index}
                 checked={checkedState[index]}
-                label={<label>{item}</label>}
+                label={<label>{item.playlistName}</label>}
                 onChange={() => handleCheckedStateChange(index)}
               ></Checkbox>
               <br />
@@ -71,7 +150,9 @@ const SelectYouTubePlaylist = () => {
           content="Are you sure to export selected playlists to YouTube Music."
           actions={["Cancel", { key: "done", content: "Sure", positive: true,]}
         ></Modal> */}
-        <Button>Export selected playlists to Spotify</Button>
+        <Button onClick={handleExport}>
+          Export selected playlists to Spotify
+        </Button>
       </div>
     </div>
   );

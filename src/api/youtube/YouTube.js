@@ -5,11 +5,12 @@ const URL = "https://www.googleapis.com/youtube/v3";
 const youtubeAccessToken = localStorage.getItem("youtubeAccessToken");
 
 //GET 
-const getYouTubePlaylist = async () => {
+const getYouTubePlaylist = async (nextPageToken) => {
   const config = {
     params: {
       "part": "snippet,contentDetails",
       "mine": "true",
+      "pageToken":nextPageToken
     },
     headers: {
       "Authorization": `Bearer ${youtubeAccessToken}`,
@@ -56,4 +57,42 @@ const createYouTubePlaylist = async (title) => {
   const res = await axios.post(`${URL}/playlists`,data,config);
   return res;
 }
-export { getYouTubePlaylist, getYouTubePlaylistItems,createYouTubePlaylist};
+
+//GET 
+const searchYouTubeForSong = async (songName) => {
+  const config = {
+    params: {
+      "part": "snippet",
+      "q":songName,
+    },
+    headers: {
+      "Authorization": `Bearer ${youtubeAccessToken}`,
+      "Content-Type": "application/json",
+    },
+  };
+  const data = await axios.get(`${URL}/search`,config);
+  return data;
+}
+
+//POST
+const addSongToYouTubePlaylist = async (playlistId,videoId) => {
+  const data = {
+    "snippet": {
+      "playlistId": playlistId,
+      "resourceId":videoId
+    }
+  }
+  const config = {
+    params: {
+      "part": "snippet",
+    },
+    headers: {
+      "Authorization": `Bearer ${youtubeAccessToken}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  const res = await axios.post(`${URL}/playlistItems}`,data,config);
+  return res;
+}
+export { getYouTubePlaylist, getYouTubePlaylistItems,createYouTubePlaylist,searchYouTubeForSong,addSongToYouTubePlaylist};

@@ -5,11 +5,13 @@ import {
   getSongsInsideCurrentUserPlaylist,
 } from "../../api/spotify/Spotify";
 import { createYouTubePlaylist } from "../../api/youtube/YouTube";
+import ExportToYoutube from "./ExportToYoutube";
 
 const SelectSpotifyPlaylist = () => {
   const [playList, setPlaylist] = useState([]);
   const [songsInsidePlaylist, setSongsInsidePlaylist] = useState([]);
   const [checkedState, setCheckedState] = useState([]);
+  const [exportButtonClicked, setExportButtonClicked] = useState(false);
 
   //fetch spotify playlist data as soon as the page loads
   useEffect(() => {
@@ -52,24 +54,29 @@ const SelectSpotifyPlaylist = () => {
       if (checkedState[index] === true) {
         let songsInsidePlaylistTemp = [];
         //This will create a new playlist in youtube with same name as spotify playlist
-        // const res = await createYouTubePlaylist(item);
+        const res = await createYouTubePlaylist(item[0]);
+        const youtubePlaylistId = res.data.id;
         //This will get all songs inside the current spotify playlist
         const playlistData = await getSongsInsideCurrentUserPlaylist(item[1]);
-        const playlistDataArray = playlistData.data.items; 
+        const playlistDataArray = playlistData.data.items;
         playlistDataArray.forEach((singleTrack) => {
           songsInsidePlaylistTemp.push(singleTrack.track.name);
         });
-        songsInsidePlaylistObject.push({
-          playlistName : item[0],
-          songs : songsInsidePlaylistTemp,
+        songsInsidePlaylistObject.unshift({
+          youtubePlaylistId: youtubePlaylistId,
+          playlistName: item[0],
+          songs: songsInsidePlaylistTemp,
         });
       }
     });
     setSongsInsidePlaylist([...songsInsidePlaylist, songsInsidePlaylistObject]);
     console.log(songsInsidePlaylist);
-    //Now i have to serach for all songs inside the playlist using youtbe api
+    //Now i have to serach for all songs inside the playlist using youtube api
     //and insert it into the newly created playlist in youtube.
-    
+  };
+
+  const handleExportButtonClick = () => {
+    setExportButtonClicked(!exportButtonClicked);
   };
 
   return (
@@ -100,8 +107,14 @@ const SelectSpotifyPlaylist = () => {
           actions={["Cancel", { key: "done", content: "Sure", positive: true,]}
         ></Modal> */}
         <Button onClick={handleExportToYoutube}>
+          Confirm selected playlists
+        </Button>
+        <Button onClick={handleExportButtonClick}>
           Export selected playlists to YouTube
         </Button>
+        {exportButtonClicked && (
+          <ExportToYoutube songsInsidePlaylist={songsInsidePlaylist[0]} />
+        )}
       </div>
     </div>
   );
