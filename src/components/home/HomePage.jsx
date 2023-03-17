@@ -35,7 +35,7 @@ const HomePage = () => {
 
   return (
     <div className="home">
-      <h1>Export your playlist from Spotify to Yotube or Vice Versa</h1>
+      <h1>Export your playlist from Youtube Music to Spotify</h1>
       <p>
         First connect both of your account using the below login buttons then
         choose one of the options provided.
@@ -47,25 +47,9 @@ const HomePage = () => {
         <Button>Login to YouTube</Button>
       </a>
       <div>
-        <Segment placeholder>
-          <Grid columns={2} relaxed="very" stackable>
-            <Grid.Column>
-              <p>Export your playlists from Spotify to YouTube</p>
-              <Link to="/spotify">
-                <Button>Spotify to YouTube</Button>
-              </Link>
-            </Grid.Column>
-
-            <Grid.Column verticalAlign="middle">
-              <p>Export your playlists from YouTube to Spotify</p>
-              <Link to="/youtube">
-                <Button> YouTube to Spotify</Button>
-              </Link>
-            </Grid.Column>
-          </Grid>
-
-          <Divider vertical>Or</Divider>
-        </Segment>
+        <Link to="/youtube">
+          <Button> YouTube to Spotify</Button>
+        </Link>
       </div>
     </div>
   );

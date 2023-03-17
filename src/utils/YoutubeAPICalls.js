@@ -31,15 +31,17 @@ const getAllSongsInsidePlaylist = async (playlistId) => {
   let playlistSongData = [];
 
   while (true) {
-    const currData = await getYouTubePlaylistItems(playlistId);
+    const currData = await getYouTubePlaylistItems(playlistId,nextPageTokenValue);
     nextPageTokenValue = currData.data.nextPageToken;
+    console.log(nextPageTokenValue);
     const itemsArray = currData.data.items;
     itemsArray.forEach((singleItem) => {
       playlistSongData.push(singleItem.snippet.title);
     });
-    if (nextPageTokenValue === undefined) {
+    if (nextPageTokenValue === null || nextPageTokenValue === undefined) {
       break;
     }
+
   }
   return playlistSongData;
 };

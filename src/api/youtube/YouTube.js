@@ -10,7 +10,8 @@ const getYouTubePlaylist = async (nextPageToken) => {
     params: {
       "part": "snippet,contentDetails",
       "mine": "true",
-      "pageToken":nextPageToken
+      "pageToken":nextPageToken,
+      "maxResults":50
     },
     headers: {
       "Authorization": `Bearer ${youtubeAccessToken}`,
@@ -22,11 +23,13 @@ const getYouTubePlaylist = async (nextPageToken) => {
 };
 
 //GET
-const getYouTubePlaylistItems = async (playlistId) => {
+const getYouTubePlaylistItems = async (playlistId,nextPageToken) => {
   const config = {
     params: {
       "part": "snippet,contentDetails",
       "playlistId":playlistId,
+      "maxResults":50,
+      "pageToken":nextPageToken
     },
     headers: {
       "Authorization": `Bearer ${youtubeAccessToken}`,

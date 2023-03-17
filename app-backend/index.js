@@ -56,7 +56,7 @@ app.get("/spotify/callback", (req, res) => {
           refresh_token,
           expires_in,
         });
-        res.redirect(`http://localhost:3000/?${queryParams}`);
+        res.redirect(`http://localhost:5173/?${queryParams}`);
 
       } else {
         res.send(response);

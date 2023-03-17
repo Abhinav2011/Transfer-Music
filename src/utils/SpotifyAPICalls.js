@@ -23,7 +23,6 @@ const searchForSongIdAndCreateSongURI = async (songs) => {
     songs.map(async (song) => {
       const data = await searchSpotifyForSong(song);
       const songId = data.data.tracks.items[0].id;
-      // console.log(songId);
       arr.push(`spotify:track:${songId}`);
     })
   );

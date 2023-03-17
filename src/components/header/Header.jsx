@@ -2,9 +2,9 @@ import React from 'react'
 
 const Header = () => {
   return (
-    <div>
+    <div className="header">
         <h1>Transfer Music</h1>
-        <p>Easily Transfer Music from Spotify to YouTube or vice versa.</p>
+        <p>Easily Transfer Music from Yotube Music to Spotify</p>
     </div>
   )
 }
