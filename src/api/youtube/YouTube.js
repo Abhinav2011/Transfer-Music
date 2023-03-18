@@ -4,11 +4,14 @@ const URL = "https://www.googleapis.com/youtube/v3";
 
 const youtubeAccessToken = localStorage.getItem("youtubeAccessToken");
 
-const getYouTubePlaylist = async () => {
+//GET 
+const getYouTubePlaylist = async (nextPageToken) => {
   const config = {
     params: {
       "part": "snippet,contentDetails",
       "mine": "true",
+      "pageToken":nextPageToken,
+      "maxResults":50
     },
     headers: {
       "Authorization": `Bearer ${youtubeAccessToken}`,
@@ -19,11 +22,14 @@ const getYouTubePlaylist = async () => {
   return data;
 };
 
-const getYouTubePlaylistItems = async (playlistId) => {
+//GET
+const getYouTubePlaylistItems = async (playlistId,nextPageToken) => {
   const config = {
     params: {
       "part": "snippet,contentDetails",
       "playlistId":playlistId,
+      "maxResults":50,
+      "pageToken":nextPageToken
     },
     headers: {
       "Authorization": `Bearer ${youtubeAccessToken}`,
@@ -34,4 +40,62 @@ const getYouTubePlaylistItems = async (playlistId) => {
   return data;
 };
 
-export { getYouTubePlaylist, getYouTubePlaylistItems};
+//POST
+const createYouTubePlaylist = async (title) => {
+  //axios.post(api, data, config)
+  const data = {
+    "snippet": {
+      "title": title
+    }
+  }
+  const config = {
+    params: {
+      "part": "snippet,contentDetails",
+    },
+    headers: {
+      "Authorization": `Bearer ${youtubeAccessToken}`,
+      "Content-Type": "application/json",
+    },
+  };
+  const res = await axios.post(`${URL}/playlists`,data,config);
+  return res;
+}
+
+//GET 
+const searchYouTubeForSong = async (songName) => {
+  const config = {
+    params: {
+      "part": "snippet",
+      "q":songName,
+    },
+    headers: {
+      "Authorization": `Bearer ${youtubeAccessToken}`,
+      "Content-Type": "application/json",
+    },
+  };
+  const data = await axios.get(`${URL}/search`,config);
+  return data;
+}
+
+//POST
+const addSongToYouTubePlaylist = async (playlistId,videoId) => {
+  const data = {
+    "snippet": {
+      "playlistId": playlistId,
+      "resourceId":videoId
+    }
+  }
+  const config = {
+    params: {
+      "part": "snippet",
+    },
+    headers: {
+      "Authorization": `Bearer ${youtubeAccessToken}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  const res = await axios.post(`${URL}/playlistItems}`,data,config);
+  return res;
+}
+export { getYouTubePlaylist, getYouTubePlaylistItems,createYouTubePlaylist,searchYouTubeForSong,addSongToYouTubePlaylist};
