@@ -14,9 +14,11 @@ const getAllYoutubePlaylist = async () => {
     playlists.forEach((data) => {
       const playlistName = data.snippet.localized.title;
       const playlistId = data.id;
+      const imageUrl = data.snippet.thumbnails.medium.url;
       playlistData.push({
         playlistName: playlistName,
         playlistId: playlistId,
+        imageUrl:imageUrl,
       });
     });
     if (nextPageTokenValue === undefined) {
@@ -33,7 +35,6 @@ const getAllSongsInsidePlaylist = async (playlistId) => {
   while (true) {
     const currData = await getYouTubePlaylistItems(playlistId,nextPageTokenValue);
     nextPageTokenValue = currData.data.nextPageToken;
-    console.log(nextPageTokenValue);
     const itemsArray = currData.data.items;
     itemsArray.forEach((singleItem) => {
       playlistSongData.push(singleItem.snippet.title);
