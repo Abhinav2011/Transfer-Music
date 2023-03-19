@@ -11,9 +11,8 @@ import {
   searchForSongIdAndCreateSongURI,
 } from "../../utils/SpotifyAPICalls";
 import SinglePlaylistCard from "../playlistCard/SinglePlaylistCard";
-import Loading from "../Loader/Loading";
+import Loading from "../loader/Loading";
 import { Pagination } from "react-bootstrap";
-
 
 const SelectYouTubePlaylist = () => {
   const [playList, setPlaylist] = useState([]);
@@ -22,6 +21,7 @@ const SelectYouTubePlaylist = () => {
   const [checkedState, setCheckedState] = useState([]);
   const [loading, setLoading] = useState(true);
   const [width, setWidth] = useState(1200);
+  const [exportLoader, setExportLoader] = useState(false);
 
   useEffect(() => {
     setWidth(window.innerWidth);
@@ -73,6 +73,7 @@ const SelectYouTubePlaylist = () => {
   };
 
   const handleExport = async () => {
+    setExportLoader(true);
     await Promise.all(
       checkedState.map(async (state, index) => {
         if (state) {
@@ -90,11 +91,14 @@ const SelectYouTubePlaylist = () => {
         }
       })
     );
+
+    setExportLoader(false);
   };
+
   const handlePageChange = (index) => {
     setCurrState(state[index]);
   };
-
+  
   return (
     <div className="selectYoutubePlaylist">
       <h1 className="playlistHeading">Select Playlist</h1>
@@ -150,6 +154,7 @@ const SelectYouTubePlaylist = () => {
           >
             Export To Spotify
           </button>
+          {exportLoader && <Loading />}
         </div>
       </div>
     </div>
