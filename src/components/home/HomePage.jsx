@@ -35,12 +35,12 @@ const HomePage = () => {
     <div className="home">
       <div>
         <div className="homepage-first-heading">
-          <p class="text-4xl text-gray-900 dark:text-white">
+          <p class="text-4xl text-gray-900 dark:text-white text">
             Export your playlist from Youtube Music to Spotify
           </p>
         </div>
         <div className="homepage-first-heading">
-          <p class="text-2xl text-gray-900 dark:text-white">
+          <p class="text-2xl text-gray-900 dark:text-white text">
             First connect both of your account using the below login buttons
             then choose Youtube to Spotify.
           </p>
