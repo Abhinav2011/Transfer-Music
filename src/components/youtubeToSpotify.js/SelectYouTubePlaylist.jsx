@@ -11,9 +11,9 @@ import {
   searchForSongIdAndCreateSongURI,
 } from "../../utils/SpotifyAPICalls";
 import SinglePlaylistCard from "../playlistCard/SinglePlaylistCard";
-// import { Pagination } from "semantic-ui-react";
+import Loading from "../Loader/Loading";
 import { Pagination } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
+
 
 const SelectYouTubePlaylist = () => {
   const [playList, setPlaylist] = useState([]);
@@ -21,13 +21,12 @@ const SelectYouTubePlaylist = () => {
   const [state, setState] = useState([]);
   const [checkedState, setCheckedState] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [width,setWidth] = useState(1200);
+  const [width, setWidth] = useState(1200);
 
   useEffect(() => {
     setWidth(window.innerWidth);
     const fetchData = async () => {
       setLoading(true);
-      console.log("here");
       const playlists = await getAllYoutubePlaylist();
       setPlaylist(playlists);
       setCheckedState(new Array(playlists.length).fill(false));
@@ -93,13 +92,13 @@ const SelectYouTubePlaylist = () => {
     );
   };
   const handlePageChange = (index) => {
-    console.log(index)
     setCurrState(state[index]);
   };
+
   return (
     <div className="selectYoutubePlaylist">
       <h1 className="playlistHeading">Select Playlist</h1>
-      {!loading && (
+      {!loading ? (
         <>
           <Card.Group itemsPerRow={3}>
             {currState.data.map((item, index) => {
@@ -115,8 +114,7 @@ const SelectYouTubePlaylist = () => {
               );
             })}
           </Card.Group>
-          <Pagination className="lg pagination"
-          >
+          <Pagination className="lg pagination">
             {state.map((_, index) => {
               return (
                 <Pagination.Item
@@ -130,6 +128,8 @@ const SelectYouTubePlaylist = () => {
             })}
           </Pagination>
         </>
+      ) : (
+        <Loading />
       )}
       <div className="exportButtons">
         <div>

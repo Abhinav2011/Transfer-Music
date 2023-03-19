@@ -112,6 +112,7 @@ code {
 .single-card:hover {
   opacity: 0.7;
 }
+
 @media screen and (max-width:768px) {
   .heading-text {
     font-size: medium;
